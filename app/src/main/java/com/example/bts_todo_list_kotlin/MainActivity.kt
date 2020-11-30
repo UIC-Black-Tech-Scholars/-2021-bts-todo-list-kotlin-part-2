@@ -2,6 +2,9 @@ package com.example.bts_todo_list_kotlin
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.view.ViewParent
+import android.widget.EditText
 import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -14,25 +17,32 @@ class MainActivity : AppCompatActivity() {
     private lateinit var listView: ListView
     private lateinit var dataList: ArrayList<ListItem>
     private lateinit var floatingActionButton: FloatingActionButton
-//    private lateinit var customArrayAdapter:CustomListItemAdapter
+    private lateinit var customArrayAdapter:CustomListItemAdapter
     private var gson = Gson()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         resources.openRawResource(R.raw.test).bufferedReader().use {
             val stype = object : TypeToken<ArrayList<ListItem>>() {}.type
             dataList = gson.fromJson(it.readText(), stype)
         }
+        //find view objects
+        listView = findViewById(R.id.list_view)
+        floatingActionButton = findViewById(R.id.floatingActionButton)
+
         //create list data
         dataList.forEach { item ->
             Log.d(TAG, item.toString())
         }
-        //find view objects
-        listView = findViewById(R.id.list_view)
         //hook list data up to our list using array adapter
+        customArrayAdapter = CustomListItemAdapter(this, dataList)
+        listView.adapter = customArrayAdapter
+
     }
+
+
+
 
 
 }
